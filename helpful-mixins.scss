@@ -1,0 +1,168 @@
+// Insert FontAwesome Icon as pseudo element, default is circle-arrow-right
+@mixin faIcon($content: "\f0a9") {
+    content: $content;
+    font-family: "Font Awesome 5 Free";
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1;
+  }
+  
+  @mixin faBrand($content: '\f0d2') {
+    content: $content;
+    font-family: "Font Awesome 5 Brands";
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1;
+  }
+  
+  @function strip-units($value) {
+      @return $value / ($value * 0 + 1);
+  }
+  
+  @mixin fs($base, $lg: $base, $md: $base, $sm: $base) {
+    // mobile
+    @if $sm != $base {
+      @include media-breakpoint-down(md) { font-size: #{$sm + $rfs-unit}; }
+    
+    @include media-breakpoint-up(md) { 
+     font-size: #{$base + $rfs-unit};
+    }
+    
+    } @else {
+      font-size: #{$base + $rfs-unit};
+    }
+    
+    @if $md != $base {
+      @include media-breakpoint-only(md) { font-size: #{$md + $rfs-unit}; }
+    }
+    @if $lg != $base {
+      @include media-breakpoint-only(lg) { font-size: #{$lg + $rfs-unit}; }
+    }
+  }
+   
+  @mixin f($family, $size, $weight: 400, $style: normal, $transform: none, $size-lg: $size, $size-md: $size, $size-sm: $size) {
+    font-family: $family;
+    font-weight: $weight;
+    font-style: $style;
+    text-transform: $transform;
+    @if $size-sm != $size {
+      @include media-breakpoint-down(md) { font-size: #{$size-sm + $rfs-unit}; }
+      @include media-breakpoint-up(md) { font-size: #{$size + $rfs-unit}; }
+    } @else {
+      font-size: #{$size + $rfs-unit};
+    }
+    @if $size-md != $size {
+      @include media-breakpoint-only(md) { font-size: #{$size-md + $rfs-unit}; }
+    }
+    @if $size-lg != $size {
+      @include media-breakpoint-only(lg) { font-size: #{$size-lg + $rfs-unit}; }
+    }
+  }
+
+  @mixin h1 {
+    @include fs($h1-font-size, $sm: $h1-font-size-sm);
+    @if variable-exists(h1-font) { font-family: $h1-font; }
+    @if variable-exists(h1-weight) { font-weight: $h1-weight; } 
+    @if variable-exists(h1-color) { color: $h1-color; }
+    @if variable-exists(h1-transform) { text-transform: $h1-transform; }
+    @if variable-exists(h1-font-size-lg) {
+      @include media-breakpoint-only(lg) { font-size: #{$h1-font-size-lg + $rfs-unit}; }
+    }
+    @if variable-exists(h1-font-size-md) {
+      @include media-breakpoint-only(md) { font-size: #{$h1-font-size-md + $rfs-unit}; }
+    }
+  }
+  
+  @mixin h2 {
+    @include fs($h2-font-size, $sm: $h2-font-size-sm);
+    @if variable-exists(h2-font) { font-family: $h2-font; }
+    @if variable-exists(h2-weight) { font-weight: $h2-weight; } 
+    @if variable-exists(h2-color) { color: $h2-color; }
+    @if variable-exists(h2-transform) { text-transform: $h2-transform; }
+    @if variable-exists(h2-font-size-lg) {
+      @include media-breakpoint-only(lg) { font-size: #{$h2-font-size-lg + $rfs-unit}; }
+    }
+    @if variable-exists(h2-font-size-md) {
+      @include media-breakpoint-only(md) { font-size: #{$h2-font-size-md + $rfs-unit}; }
+    }
+  }
+    
+  @mixin h3 {
+    @include fs($h3-font-size, $sm: $h3-font-size-sm);
+    @if variable-exists(h3-font) { font-family: $h3-font; }
+    @if variable-exists(h3-weight) { font-weight: $h3-weight; } 
+    @if variable-exists(h3-color) { color: $h3-color; }
+    @if variable-exists(h3-transform) { text-transform: $h3-transform; }
+  }
+    
+  
+  @mixin h4 {
+    @include fs($h4-font-size, $sm: $h4-font-size-sm);
+    @if variable-exists(h4-font) { font-family: $h4-font; }
+    @if variable-exists(h4-weight) { font-weight: $h4-weight; } 
+    @if variable-exists(h4-color) { color: $h4-color; }
+    @if variable-exists(h4-transform) { text-transform: $h4-transform; }
+  }
+  
+  // full width backgrounds on contained elements
+  @mixin fullWidthBg($bg, $align: left) {
+    position: absolute;
+    width: 100vw; 
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    z-index: -1;
+    background: $bg;
+  
+    @each $breakpoint, $container-max-width in $container-max-widths {
+      
+      @include media-breakpoint-only($breakpoint) {
+        transform: none;
+        @if $align == left {
+          left: calc(-50vw + (#{$container-max-width}/2));
+        } @else {
+          right: calc(-50vw + (#{$container-max-width}/2));
+        }
+      }
+    }
+    
+  }
+  
+  @mixin fullWidth($align: left) {
+    position: absolute;
+    width: 100vw; 
+    height: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    z-index: -1;
+  
+    @each $breakpoint, $container-max-width in $container-max-widths {
+      
+      @include media-breakpoint-only($breakpoint) {
+        transform: none;
+        @if $align == left {
+          left: calc(-50vw + (#{$container-max-width}/2));
+        } @else {
+          right: calc(-50vw + (#{$container-max-width}/2));
+        }
+      }
+    }
+  }
+
+  @function set-button-text-color($color) {  
+    @if (lightness( $color ) > 65) {
+      @return black;
+    }
+    @else {
+      @return white;
+    }
+  }
+  @function hexToRGB($hex) {
+    @return red($hex), green($hex), blue($hex);
+  }

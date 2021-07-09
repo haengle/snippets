@@ -1,4 +1,9 @@
 
+// only trigger function for users without prefers reduced motion set
+var notReduceMotion = window.matchMedia('(prefers-reduced-motion: no-preference)');
+if (!notReduceMotion || notReduceMotion.matches) {
+    // do stuff
+}
 
 // Accessibility / Helper Functions
 function pollContent(content, callback) {

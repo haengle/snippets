@@ -1,5 +1,5 @@
 /*
-Uses js to check for IE 11 and below
+Uses js to check for Legacy Edge and below
 */
 
 ((function() {
@@ -11,8 +11,9 @@ Uses js to check for IE 11 and below
 		const ua = window.navigator.userAgent; //Check the userAgent property of the window.navigator object
 		const msie = ua.indexOf('MSIE '); // IE 10 or older
 		const trident = ua.indexOf('Trident/'); //IE 11
+		const legacy = ua.indexOf('Edge/');
 	
-		return (msie > 0 || trident > 0);
+		return (msie > 0 || trident > 0 || legacy > 0);
 	}
 
 	if (isIE()) {

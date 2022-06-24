@@ -88,3 +88,6 @@ eleventyConfig.addFilter("filterResults", function(array, type, match) {
       });
     }
   });
+
+// use with 11ty collection
+//  {% set eventList = collections.events | filterResults('named', ['match','names']) | limit(eventLimit) %}

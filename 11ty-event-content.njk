@@ -1,0 +1,106 @@
+{% from 'default/elements/button.njk' import button with context %}
+{% set isEvent = true %}
+{% set cardTheme = data.options.cardTheme.value %}
+{% set dateFormat = data.options.dateFormat.value %}
+{% set eventLimit = data.fields.limit.value | default('99') | int %}
+{% set eventList = collections.events | limit(eventLimit) %}
+{% set eventSource = data.fields.source.value | default('all') %}
+{% set eventFilters = [] %}
+{% set displayType = data.options.eventDisplay.value | default('list') %}
+{% set navPos = data.options.navigationPosition.value %}
+
+{% if eventSource == 'category' %}
+  {% set categoryFilters = data.fields.categorySource.value.split(',') %}
+    {% for cat in categoryFilters %}
+    {% set eventFilters = (eventFilters.push(cat | trim | lower), eventFilters) %}
+    {% endfor %}
+    
+    {% set eventList = collections.events | filterResults('category', eventFilters) | limit(eventLimit) %}
+{% endif %}
+
+{% if eventSource == 'named' %}
+    {% for label in data.fields.namedSource.value.split(',') %}
+    {% set eventFilters = (eventFilters.push(label | trim | lower), eventFilters) %}
+    {% endfor %}
+
+    {% set eventList = collections.events | filterResults('named', eventFilters) | limit(eventLimit) %}
+
+{% endif %}
+
+
+<section class="
+    {{ 'cards-outer section' if (displayType == 'list') and not isInner }}
+    {{ 'carousel-outer' if displayType == 'carousel' }}
+     max-w-none
+    {{ data.options.customClass.value }}">
+ 
+    {% if data.options.hideTitle.value == false %}
+      <h2 class="{{ 'text-center' if data.options.centerTitle.value }}">{{ data.fields.title.value | safe }}</h2>
+    {% endif %}    
+
+    
+    {% if displayType == 'list' %}
+     <div class="card-group-wrapper 
+        {{ 'cols-1' if data.options.groupLayout.value == 'one' }} 
+        {{ 'cols-2' if data.options.groupLayout.value == 'two' }} 
+        {{ 'cols-3' if (data.options.groupLayout.value == 'three') or (data.options.groupLayout.value == "") }} 
+        {{ 'cols-4' if data.options.groupLayout.value == 'four' }} 
+        {{ data.options.customClass.value }}">
+    {% endif %}
+    {% if displayType == 'carousel' %}
+    <div class="carousel
+        swiper"
+        x-carousel.horizontal="
+        {{ '1' if data.options.groupLayout.value == 'one' }} 
+        {{ '2' if data.options.groupLayout.value == 'two' }} 
+        {{ '3' if (data.options.groupLayout.value == 'three') or (data.options.groupLayout.value == "") }} 
+        {{ '4' if data.options.groupLayout.value == 'four' }}"
+    >
+    {% if not data.options.disablePagination.value %}
+    <div class="swiper-pagination"></div>
+    {% endif %}
+    {% if not data.options.disableNavigation.value %}
+       <div class="swiper-navigation-wrapper 
+        {{ 'swiper-navigation--default' if navPos == 'default' }}
+        {{ 'swiper-navigation--left' if navPos == 'left' }}
+        {{ 'swiper-navigation--center' if navPos == 'center' }}
+        {{ 'swiper-navigation--bottom' if navPos == 'bottom' }}
+        {{ 'swiper-navigation--bottom-center' if navPos == 'bottom-center' }}
+        ">
+        <div class="swiper-button-prev">
+            <i class="far fa-chevron-left"></i>
+        </div>
+        <div class="swiper-button-next">
+            <i class="far fa-chevron-right"></i>
+        </div>
+       </div>
+    {% endif %}
+    <div class="carousel-wrapper swiper-wrapper">
+    {% endif %}
+
+    {% if eventList | length > 0 %}
+         {% for event in eventList %}
+                {% if displayType == 'carousel' %}
+                <div class="swiper-slide">
+                {% endif %}
+            
+                {% set eventData = event.fields.content.fields %}
+                
+                {% include 'default/elements/event-card.njk' ignore missing %}
+
+                {% if displayType == 'carousel' %}
+                </div>
+                {% endif %}
+        {% endfor %}
+    
+    {% else %}  
+    <div class="flex-100">
+            {{ data.fields.emptyMessage.value | safe }}
+    </div>
+    {% endif %}
+   
+   {% if displayType == 'carousel' %}
+    </div>
+   {% endif %}
+  </div>
+</section>
